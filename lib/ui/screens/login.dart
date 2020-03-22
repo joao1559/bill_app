@@ -35,9 +35,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-      messages: LoginMessages(
-
-      ),
       title: 'BILL',
       onLogin: _authUser,
       onSignup: _authUser,
