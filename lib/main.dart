@@ -1,10 +1,10 @@
+import 'package:bill_app/ui/screens/home.dart';
 import 'package:bill_app/ui/screens/login.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
   title: 'Flutter Demo',
   theme: ThemeData(
-    primarySwatch: Colors.indigo,
     accentColor: Colors.greenAccent,
     cursorColor: Colors.greenAccent,
     textTheme: TextTheme(
@@ -20,5 +20,5 @@ void main() => runApp(MaterialApp(
       body1: TextStyle(fontFamily: 'NotoSans'),
     ),
   ),
-  home: LoginScreen(),
+  home: Home(),
 ));

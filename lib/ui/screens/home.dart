@@ -1,5 +1,8 @@
+import 'package:bill_app/ui/screens/resumo.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:unicorndial/unicorndial.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -14,6 +17,12 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     _pageController = PageController();
   }
 
@@ -25,6 +34,51 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    var _childButtons = [
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Transferência",
+        currentButton: FloatingActionButton(
+          heroTag: "train",
+          backgroundColor: Colors.lightBlue,
+          mini: true,
+          child: Icon(
+            Icons.swap_vert,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        )
+      ),
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Entrada",
+        currentButton: FloatingActionButton(
+          heroTag: "trending_up",
+          backgroundColor: Colors.green,
+          mini: true,
+          child: Icon(
+            Icons.trending_up,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        )
+      ),
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Saída",
+        currentButton: FloatingActionButton(
+          heroTag: "trending_down",
+          backgroundColor: Colors.redAccent,
+          mini: true,
+          child: Icon(
+            Icons.trending_down,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        )
+      )
+    ];
+
     return Scaffold(
       body: SizedBox.expand(
         child: PageView(
@@ -33,7 +87,7 @@ class _HomeState extends State<Home> {
             setState(() => _currentIndex = index);
           },
           children: <Widget>[
-            Container(color: Colors.blueGrey,),
+            Resumo(),
             Container(color: Colors.red,),
             Container(color: Colors.green,),
             Container(color: Colors.blue,),
@@ -48,34 +102,37 @@ class _HomeState extends State<Home> {
         },
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            activeColor: Colors.blueGrey,
+            activeColor: Theme.of(context).primaryColor,
             inactiveColor: Colors.blue,
             title: Text('Item One'),
             icon: Icon(Icons.home)
           ),
           BottomNavyBarItem(
-            activeColor: Colors.red,
+            activeColor: Theme.of(context).primaryColor,
             inactiveColor: Colors.blue,
             title: Text('Item One'),
             icon: Icon(Icons.apps)
           ),
           BottomNavyBarItem(
-            activeColor: Colors.green,
+            activeColor:Theme.of(context).primaryColor,
             inactiveColor: Colors.blue,
             title: Text('Item One'),
             icon: Icon(Icons.chat_bubble)
           ),
           BottomNavyBarItem(
-            activeColor: Colors.blue,
+            activeColor: Theme.of(context).primaryColor,
             inactiveColor: Colors.blue,
             title: Text('Item One'),
             icon: Icon(Icons.settings)
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
+      floatingActionButton: UnicornDialer(
+        backgroundColor: Color.fromRGBO(0, 0, 0, 0.6),
+        parentButtonBackground: Theme.of(context).accentColor,
+        orientation: UnicornOrientation.VERTICAL,
+        parentButton: Icon(Icons.add),
+        childButtons: _childButtons,
       ),
     );
   }
