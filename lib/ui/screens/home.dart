@@ -1,4 +1,5 @@
 import 'package:bill_app/ui/screens/resumo.dart';
+import 'package:bill_app/ui/screens/transacoes.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,7 +89,7 @@ class _HomeState extends State<Home> {
           },
           children: <Widget>[
             Resumo(),
-            Container(color: Colors.red,),
+            Transacoes(),
             Container(color: Colors.green,),
             Container(color: Colors.blue,),
           ],

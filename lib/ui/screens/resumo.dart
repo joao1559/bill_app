@@ -16,13 +16,15 @@ class _ResumoState extends State<Resumo> {
   _getMonths() async {
     http.Response response;
 
-    response = await http.get('http://www.mocky.io/v2/5e7febbd2f00005a4cbac587');
-    var items = json.decode(response.body);
+    response = await http.get('http://www.mocky.io/v2/5e8150b83000002c006f96cf');
+    var body = utf8.decode(response.bodyBytes);
+    var items = json.decode(body);
+
     setState(() {
-      _selectedMonth = items['data'][0];
+      _selectedMonth = items['records'][0];
     });
 
-    for (var month in items['data']) {
+    for (var month in items['records']) {
       _months.add(
         DropdownMenuItem(
           value: month,
@@ -32,9 +34,9 @@ class _ResumoState extends State<Resumo> {
     }
   }
 
-  _onChangeDropdownItem(Map selectedCompany) {
+  _onChangeDropdownItem(Map selectedMonth) {
     setState(() {
-      _selectedMonth = selectedCompany;
+      _selectedMonth = selectedMonth;
     });
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(MaterialApp(
   title: 'Flutter Demo',
   theme: ThemeData(
+    primaryColor: Colors.indigo,
     accentColor: Colors.greenAccent,
     cursorColor: Colors.greenAccent,
     textTheme: TextTheme(
@@ -19,6 +20,7 @@ void main() => runApp(MaterialApp(
       subhead: TextStyle(fontFamily: 'NotoSans'),
       body1: TextStyle(fontFamily: 'NotoSans'),
     ),
+    canvasColor: Colors.indigo
   ),
   home: Home(),
 ));
