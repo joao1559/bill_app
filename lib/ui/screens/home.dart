@@ -1,3 +1,4 @@
+import 'package:bill_app/ui/screens/cadastro_movimentacao.dart';
 import 'package:bill_app/ui/screens/resumo.dart';
 import 'package:bill_app/ui/screens/transacoes.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -40,7 +41,7 @@ class _HomeState extends State<Home> {
         hasLabel: true,
         labelText: "Transferência",
         currentButton: FloatingActionButton(
-          heroTag: "train",
+          heroTag: "swap_vert",
           backgroundColor: Colors.lightBlue,
           mini: true,
           child: Icon(
@@ -61,7 +62,12 @@ class _HomeState extends State<Home> {
             Icons.trending_up,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CadastroMovimentacao(1))
+            );
+          },
         )
       ),
       UnicornButton(
@@ -75,7 +81,12 @@ class _HomeState extends State<Home> {
             Icons.trending_down,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CadastroMovimentacao(2))
+            );
+          },
         )
       )
     ];
@@ -105,14 +116,14 @@ class _HomeState extends State<Home> {
           BottomNavyBarItem(
             activeColor: Theme.of(context).primaryColor,
             inactiveColor: Colors.blue,
-            title: Text('Item One'),
+            title: Text('Resumo'),
             icon: Icon(Icons.home)
           ),
           BottomNavyBarItem(
-            activeColor: Theme.of(context).primaryColor,
-            inactiveColor: Colors.blue,
-            title: Text('Item One'),
-            icon: Icon(Icons.apps)
+            activeColor: Colors.red,
+            inactiveColor: Colors.red,
+            title: Text('Transações'),
+            icon: Icon(Icons.list)
           ),
           BottomNavyBarItem(
             activeColor:Theme.of(context).primaryColor,

@@ -1,49 +1,160 @@
 import 'package:bill_app/ui/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
-const users = const {
-  'jv-rodrigues1999@hotmail.com': '123'
-};
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
 
-class LoginScreen extends StatelessWidget {
-  Duration get loginTime => Duration(milliseconds: 2250);
+class _LoginState extends State<Login> {
+  final _emailController = new TextEditingController();
+  final _passwordController = new TextEditingController();
+  var _hidePassword = false;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future<String> _authUser(LoginData data) {
-    print('Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name)) {
-        return 'Username not exists';
-      }
-      if (users[data.name] != data.password) {
-        return 'Password does not match';
-      }
-      return null;
-    });
+  Future<Map> _login() async {
+    http.Response response = await http.post(
+        // 'http://192.168.100.5:3001/auth',
+        'https://bill-financial-assistant-api.herokuapp.com/auth',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': _emailController.text,
+          'password': _passwordController.text
+        }),
+    );
+
+    return json.decode(response.body);
   }
-
-  Future<String> _recoverPassword(String name) {
-    print('Name: $name');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(name)) {
-        return 'Username not exists';
-      }
-      return null;
-    });
-  }
-
+  
   @override
   Widget build(BuildContext context) {
-    return FlutterLogin(
-      title: 'BILL',
-      onLogin: _authUser,
-      onSignup: _authUser,
-      onSubmitAnimationCompleted: () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => Home(),
-        ));
-      },
-      onRecoverPassword: _recoverPassword,
+    return Scaffold(
+      body: Container(
+        color: Colors.indigo,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 64),
+              child: Text(
+                'Bill', 
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 48
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Card(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16,bottom: 16),
+                            child: TextFormField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.person, color: Colors.pink[400],),
+                                border: OutlineInputBorder(),
+                                labelText: 'E-mail',
+                                labelStyle: TextStyle(color: Colors.black87),
+                                hintText: 'Ex: email@email.com',
+                                hintStyle: TextStyle(color: Colors.grey),
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Insira um e-mail';
+                                }
+
+                                return null;
+                              }
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: TextFormField(
+                              controller: _passwordController,
+                              obscureText: _hidePassword,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.lock, color: Colors.pink[400],),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.remove_red_eye),
+                                  onPressed: () {
+                                    setState(() {
+                                      _hidePassword = !_hidePassword;
+                                    });
+                                  },
+                                ),
+                                border: OutlineInputBorder(),
+                                labelText: 'Senha',
+                                labelStyle: TextStyle(color: Colors.black87),
+                              ),
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Insira um e-mail';
+                                }
+
+                                return null;
+                              }
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: ButtonTheme(
+                              minWidth: double.infinity,
+                              child: RaisedButton(  
+                                color: Colors.pink[400],
+                                child: Text('ENTRAR', style: TextStyle(color: Colors.white),),
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    _login().then((res) async {
+                                      if(res['error'] == null) {
+                                        var token = res['content']['token'];
+
+                                        final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                        prefs.setString('token', token);
+
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => Home())
+                                        );
+                                      }
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              FlatButton(
+                                child: Text('CADASTRE-SE', style: TextStyle(color: Colors.blue),),
+                                onPressed: () {},
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        )
+      ),
     );
   }
 }

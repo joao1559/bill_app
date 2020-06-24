@@ -1,4 +1,3 @@
-import 'package:bill_app/ui/screens/home.dart';
 import 'package:bill_app/ui/screens/login.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,6 @@ void main() => runApp(MaterialApp(
       subhead: TextStyle(fontFamily: 'NotoSans'),
       body1: TextStyle(fontFamily: 'NotoSans'),
     ),
-    canvasColor: Colors.indigo
   ),
-  home: Home(),
+  home: Login(),
 ));
