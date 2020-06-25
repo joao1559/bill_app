@@ -1,4 +1,5 @@
 import 'package:bill_app/ui/screens/cadastro_movimentacao.dart';
+import 'package:bill_app/ui/screens/opcoes.dart';
 import 'package:bill_app/ui/screens/resumo.dart';
 import 'package:bill_app/ui/screens/transacoes.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -101,8 +102,8 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             Resumo(),
             Transacoes(),
-            Container(color: Colors.green,),
             Container(color: Colors.blue,),
+            Opcoes(),
           ],
         ),
       ),
@@ -114,7 +115,7 @@ class _HomeState extends State<Home> {
         },
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            activeColor: Theme.of(context).primaryColor,
+            activeColor: Colors.blue,
             inactiveColor: Colors.blue,
             title: Text('Resumo'),
             icon: Icon(Icons.home)
@@ -126,16 +127,16 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.list)
           ),
           BottomNavyBarItem(
-            activeColor:Theme.of(context).primaryColor,
-            inactiveColor: Colors.blue,
-            title: Text('Item One'),
-            icon: Icon(Icons.chat_bubble)
+            activeColor: Colors.green,
+            inactiveColor: Colors.green,
+            title: Text('Artigos'),
+            icon: Icon(Icons.wb_incandescent, color: Colors.green,)
           ),
           BottomNavyBarItem(
-            activeColor: Theme.of(context).primaryColor,
-            inactiveColor: Colors.blue,
-            title: Text('Item One'),
-            icon: Icon(Icons.settings)
+            activeColor: Colors.black,
+            inactiveColor: Colors.black,
+            title: Text('Opções'),
+            icon: Icon(Icons.more_horiz)
           ),
         ],
       ),

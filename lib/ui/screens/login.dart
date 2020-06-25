@@ -1,3 +1,4 @@
+import 'package:bill_app/ui/screens/cadastro_usuario.dart';
 import 'package:bill_app/ui/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +14,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
-  var _hidePassword = false;
+  var _hidePassword = true;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<Map> _login() async {
@@ -40,6 +41,7 @@ class _LoginState extends State<Login> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            //Bill
             Padding(
               padding: const EdgeInsets.only(bottom: 64),
               child: Text(
@@ -50,6 +52,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
+            //Card
             Container(
               padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Card(
@@ -60,6 +63,7 @@ class _LoginState extends State<Login> {
                       key: _formKey,
                       child: Column(
                         children: <Widget>[
+                          //Email
                           Padding(
                             padding: const EdgeInsets.only(top: 16,bottom: 16),
                             child: TextFormField(
@@ -81,6 +85,7 @@ class _LoginState extends State<Login> {
                               }
                             ),
                           ),
+                          //Password
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: TextFormField(
@@ -109,6 +114,7 @@ class _LoginState extends State<Login> {
                               }
                             ),
                           ),
+                          //Login button
                           Padding(
                             padding: const EdgeInsets.only(bottom: 4),
                             child: ButtonTheme(
@@ -136,12 +142,18 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                           ),
+                          //Signup button
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               FlatButton(
                                 child: Text('CADASTRE-SE', style: TextStyle(color: Colors.blue),),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Cadastro())
+                                  );
+                                },
                               ),
                             ],
                           )
