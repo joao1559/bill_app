@@ -14,8 +14,10 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
-  var _hidePassword = true;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  var _hidePassword = true;
+  var _loginButtonDisabled = false;
+  var _saveData = false;
 
   Future<Map> _login() async {
     http.Response response = await http.post(
@@ -114,32 +116,76 @@ class _LoginState extends State<Login> {
                               }
                             ),
                           ),
+                          //Save data
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _saveData = !_saveData;
+                                });
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Checkbox(
+                                    activeColor: Colors.pink[400],
+                                    value: _saveData, 
+                                    onChanged: (_) {
+                                      setState(() {
+                                        _saveData = !_saveData;
+                                      });
+                                    }
+                                  ),
+                                  Text('Salvar dados')
+                                ],
+                              ),
+                            ),
+                          ),
                           //Login button
                           Padding(
                             padding: const EdgeInsets.only(bottom: 4),
-                            child: ButtonTheme(
-                              minWidth: double.infinity,
-                              child: RaisedButton(  
-                                color: Colors.pink[400],
-                                child: Text('ENTRAR', style: TextStyle(color: Colors.white),),
-                                onPressed: () {
-                                  if (_formKey.currentState.validate()) {
-                                    _login().then((res) async {
-                                      if(res['error'] == null) {
-                                        var token = res['content']['token'];
+                            child: Builder(
+                              builder: (context) =>
+                                ButtonTheme(
+                                  minWidth: double.infinity,
+                                  child: RaisedButton(
+                                    color: _loginButtonDisabled ? Colors.grey : Colors.pink[400],
+                                    child: Text('ENTRAR', style: TextStyle(color: Colors.white),),
+                                    onPressed: () {
+                                      if (!_loginButtonDisabled && _formKey.currentState.validate()) {
+                                        setState(() {
+                                          _loginButtonDisabled = true;
+                                        });
+                                        _login().then((res) async {
+                                          if(res['error'] == null) {
+                                            var token = res['content']['token'];
 
-                                        final SharedPreferences prefs = await SharedPreferences.getInstance();
-                                        prefs.setString('token', token);
+                                            final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                            prefs.setString('token', token);
 
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => Home())
-                                        );
+                                            if (_saveData) {
+                                              prefs.setString('email', _emailController.text);
+                                              prefs.setString('password', _passwordController.text);
+                                            }
+
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => Home())
+                                            );
+                                          } else {
+                                            final snackBar = SnackBar(
+                                              content: Text(res['message']),
+                                            );
+                                            Scaffold.of(context).showSnackBar(snackBar);
+                                            setState(() {
+                                              _loginButtonDisabled = false;
+                                            });
+                                          }
+                                        });
                                       }
-                                    });
-                                  }
-                                },
-                              ),
+                                    },
+                                  ),
+                                ),
                             ),
                           ),
                           //Signup button

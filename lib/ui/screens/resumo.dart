@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bill_app/ui/screens/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +13,6 @@ class Resumo extends StatefulWidget {
 }
 
 class _ResumoState extends State<Resumo> {
-  List<Widget> _items;
   List<DropdownMenuItem<Map<dynamic, dynamic>>> _months = [];
   List<Padding> _accounts = [];
   Map _selectedMonth;
@@ -125,32 +125,52 @@ _getAccounts() async {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                canvasColor: Colors.indigo
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    canvasColor: Colors.indigo
+                  ),
+                  child: DropdownButton(
+                    items: _months,
+                    value: _selectedMonth,
+                    onChanged: _onChangeDropdownItem,
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.white,
+                    ),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18
+                    ),
+                    hint: Container(
+                      child: Text('Loading', style: TextStyle(color: Colors.white),),
+                    ),
+                    underline: Container(
+                      color: Colors.transparent,
+                    ),
+                  ),
+                ),
               ),
-              child: DropdownButton(
-                items: _months,
-                value: _selectedMonth,
-                onChanged: _onChangeDropdownItem,
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                ),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18
-                ),
-                hint: Container(
-                  child: Text('Loading', style: TextStyle(color: Colors.white),),
-                ),
-                underline: Container(
-                  color: Colors.transparent,
+              Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.exit_to_app, color: Colors.white,),
+                  onPressed: () async {
+                    var prefs = await SharedPreferences.getInstance();
+                    prefs.remove('email');
+                    prefs.remove('password');
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login())
+                    );
+                  },
                 ),
               ),
-            ),
+            ],
           ),
           Container(
             padding: EdgeInsets.only(top: 30),

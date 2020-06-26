@@ -171,7 +171,6 @@ class _CadastroState extends State<Cadastro> {
                 } else {
                   final snackBar = SnackBar(
                     content: Text(res['message']),
-                    
                   );
                   Scaffold.of(context).showSnackBar(snackBar);
                 }
