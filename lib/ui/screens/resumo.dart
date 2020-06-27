@@ -45,7 +45,7 @@ class _ResumoState extends State<Resumo> {
     }
   }
 
-_getAccounts() async {
+ _getAccounts() async {
     http.Response response;
 
     response = await http.get(
@@ -126,35 +126,8 @@ _getAccounts() async {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    canvasColor: Colors.indigo
-                  ),
-                  child: DropdownButton(
-                    items: _months,
-                    value: _selectedMonth,
-                    onChanged: _onChangeDropdownItem,
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.white,
-                    ),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18
-                    ),
-                    hint: Container(
-                      child: Text('Loading', style: TextStyle(color: Colors.white),),
-                    ),
-                    underline: Container(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
               Builder(
                 builder: (context) => IconButton(
                   icon: Icon(Icons.exit_to_app, color: Colors.white,),

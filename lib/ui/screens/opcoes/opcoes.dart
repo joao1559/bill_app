@@ -1,3 +1,4 @@
+import 'package:bill_app/ui/screens/opcoes/contas.dart';
 import 'package:flutter/material.dart';
 
 class Opcoes extends StatelessWidget {
@@ -13,6 +14,12 @@ class Opcoes extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.account_balance),
             title: Text('Contas'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Contas())
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.bookmark),

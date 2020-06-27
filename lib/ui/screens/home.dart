@@ -1,5 +1,5 @@
 import 'package:bill_app/ui/screens/cadastro_movimentacao.dart';
-import 'package:bill_app/ui/screens/opcoes.dart';
+import 'package:bill_app/ui/screens/opcoes/opcoes.dart';
 import 'package:bill_app/ui/screens/resumo.dart';
 import 'package:bill_app/ui/screens/transacoes.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
