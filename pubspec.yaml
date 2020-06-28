@@ -14,7 +14,7 @@ description: A app for financial control.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -26,6 +26,7 @@ dependencies:
 
   bottom_navy_bar: ^5.3.2
   unicorndial: ^1.1.5
+  flutter_speed_dial: ^1.0.9
   http:
   flutter_masked_text: ^0.7.0
   intl: ^0.16.1

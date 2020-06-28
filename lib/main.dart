@@ -8,8 +8,6 @@ import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var _isLogged = false;
-
   var prefs = await SharedPreferences.getInstance();
   var _email = prefs.getString('email');
   var _password = prefs.getString('password');
@@ -43,18 +41,6 @@ void main() async {
               primaryColor: Colors.indigo,
               accentColor: Colors.greenAccent,
               cursorColor: Colors.greenAccent,
-              textTheme: TextTheme(
-                display2: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 45.0,
-                  color: Colors.greenAccent,
-                ),
-                button: TextStyle(
-                  fontFamily: 'OpenSans',
-                ),
-                subhead: TextStyle(fontFamily: 'NotoSans'),
-                body1: TextStyle(fontFamily: 'NotoSans'),
-              ),
             ),
             home: Home(),
           )
@@ -67,18 +53,6 @@ void main() async {
               primaryColor: Colors.indigo,
               accentColor: Colors.greenAccent,
               cursorColor: Colors.greenAccent,
-              textTheme: TextTheme(
-                display2: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 45.0,
-                  color: Colors.greenAccent,
-                ),
-                button: TextStyle(
-                  fontFamily: 'OpenSans',
-                ),
-                subhead: TextStyle(fontFamily: 'NotoSans'),
-                body1: TextStyle(fontFamily: 'NotoSans'),
-              ),
             ),
             home: Login(),
           )
@@ -93,18 +67,6 @@ void main() async {
           primaryColor: Colors.indigo,
           accentColor: Colors.greenAccent,
           cursorColor: Colors.greenAccent,
-          textTheme: TextTheme(
-            display2: TextStyle(
-              fontFamily: 'OpenSans',
-              fontSize: 45.0,
-              color: Colors.greenAccent,
-            ),
-            button: TextStyle(
-              fontFamily: 'OpenSans',
-            ),
-            subhead: TextStyle(fontFamily: 'NotoSans'),
-            body1: TextStyle(fontFamily: 'NotoSans'),
-          ),
         ),
         home: Login(),
       )

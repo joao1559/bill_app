@@ -5,6 +5,7 @@ import 'package:bill_app/ui/screens/transacoes.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:unicorndial/unicorndial.dart';
 
 class Home extends StatefulWidget {
@@ -13,7 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
+  IconData _icon = Icons.add;
   int _currentIndex = 0;
   PageController _pageController;
 
@@ -38,57 +39,42 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var _childButtons = [
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Transferência",
-        currentButton: FloatingActionButton(
-          heroTag: "swap_vert",
-          backgroundColor: Colors.lightBlue,
-          mini: true,
-          child: Icon(
-            Icons.swap_vert,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        )
+      SpeedDialChild(
+        child: Icon(
+          Icons.swap_vert,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.lightBlue,
+        label: 'Transferência',
+        onTap: () {}
       ),
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Entrada",
-        currentButton: FloatingActionButton(
-          heroTag: "trending_up",
-          backgroundColor: Colors.green,
-          mini: true,
-          child: Icon(
-            Icons.trending_up,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CadastroMovimentacao(1))
-            );
-          },
-        )
+      SpeedDialChild(
+        child: Icon(
+          Icons.trending_up,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.green,
+        label: 'Entrada',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CadastroMovimentacao(1))
+          );
+        }
       ),
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Saída",
-        currentButton: FloatingActionButton(
-          heroTag: "trending_down",
-          backgroundColor: Colors.redAccent,
-          mini: true,
-          child: Icon(
-            Icons.trending_down,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CadastroMovimentacao(2))
-            );
-          },
-        )
+      SpeedDialChild(
+        child: Icon(
+          Icons.trending_down,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.redAccent,
+        label: 'Saída',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CadastroMovimentacao(2))
+          );
+        }
       )
     ];
 
@@ -140,13 +126,31 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      floatingActionButton: UnicornDialer(
-        backgroundColor: Color.fromRGBO(0, 0, 0, 0.6),
-        parentButtonBackground: Theme.of(context).accentColor,
-        orientation: UnicornOrientation.VERTICAL,
-        parentButton: Icon(Icons.add),
-        childButtons: _childButtons,
-      ),
+      floatingActionButton: _currentIndex < 2 ? SpeedDial(
+          child: Icon(_icon),
+          visible: true,
+          closeManually: false,
+          onOpen: ()  {
+            setState(() {
+              _icon = Icons.close;
+            });
+          },
+          onClose: ()  {
+            setState(() {
+              _icon = Icons.add;
+            });
+          },
+          curve: Curves.bounceIn,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          tooltip: 'Menu',
+          heroTag: 'menu',
+          backgroundColor: Colors.pink[400],
+          foregroundColor: Colors.white,
+          elevation: 8.0,
+          shape: CircleBorder(),
+          children: _childButtons
+        ) : null,
     );
   }
 }

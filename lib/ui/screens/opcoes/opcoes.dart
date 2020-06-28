@@ -1,4 +1,4 @@
-import 'package:bill_app/ui/screens/opcoes/contas.dart';
+import 'package:bill_app/ui/screens/opcoes/contas/contas.dart';
 import 'package:flutter/material.dart';
 
 class Opcoes extends StatelessWidget {

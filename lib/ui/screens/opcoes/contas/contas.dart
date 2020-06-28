@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'package:bill_app/ui/screens/opcoes/contas/contas-info.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +16,7 @@ class _ContasState extends State<Contas> {
   String _token;
   double _totalBalance;
   String _totalBalanceFormatted;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   _getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -38,6 +40,7 @@ class _ContasState extends State<Contas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Contas'),
       ),
@@ -69,9 +72,7 @@ class _ContasState extends State<Contas> {
                         itemCount: snapshot.data['accounts'].length,
                         itemBuilder: (context, index) {
                           var item = snapshot.data['accounts'][index];
-
                           var balance = formatter.format(item['actualBalance']);
-
                           var icon = int.parse(item['icon']);
 
                           return ListTile(
@@ -88,8 +89,20 @@ class _ContasState extends State<Contas> {
                             subtitle: Text(item['typeTitle']),
                             trailing: Text(
                               balance,
-                              style: TextStyle(color: item['actualBalance'] > 0 ? Colors.green : Colors.red),
+                              style: TextStyle(color: item['actualBalance'] >= 0 ? Colors.green : Colors.red),
                             ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ContasInfo(id: item['id'],))
+                              ).then((value) {
+                                if (value != null) {
+                                  setState(() {
+                                    _scaffoldKey.currentState.showSnackBar(value);
+                                  });
+                                }
+                              });
+                            },
                           );
                         },
                       ),
@@ -102,7 +115,7 @@ class _ContasState extends State<Contas> {
                           Text(
                             _totalBalanceFormatted ?? '-',
                             style: TextStyle(
-                              color: _totalBalance != null && _totalBalance > 0 ? Colors.green : Colors.red,
+                              color: _totalBalance != null && _totalBalance >= 0 ? Colors.green : Colors.red,
                               fontSize: 17
                             ),
                           ),
@@ -115,7 +128,7 @@ class _ContasState extends State<Contas> {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey,
-                            offset: Offset(0.0, 1.0), //(x,y)
+                            offset: Offset(0.0, 1.0),
                             blurRadius: 6.0,
                           )
                         ]
@@ -133,10 +146,23 @@ class _ContasState extends State<Contas> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 50),
-        child: FloatingActionButton(
-          backgroundColor: Colors.pink[400],
-          child: Icon(Icons.add, color: Colors.white,),
-          onPressed: () {},
+        child: Builder(
+          builder: (context) => FloatingActionButton(
+            backgroundColor: Colors.pink[400],
+            child: Icon(Icons.add, color: Colors.white,),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ContasInfo())
+              ).then((value) {
+                if (value != null) {
+                  setState(() {
+                    Scaffold.of(context).showSnackBar(value);
+                  });
+                }
+              });
+            },
+          ),
         ),
       ),
     );
