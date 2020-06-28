@@ -181,7 +181,7 @@ class _ContasInfoState extends State<ContasInfo> {
                 }
               });
             },
-          ) : null
+          ) : Container()
         ],
       ),
       body: Container(

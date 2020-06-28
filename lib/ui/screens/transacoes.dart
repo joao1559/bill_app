@@ -102,77 +102,53 @@ class _TransacoesState extends State<Transacoes> {
       var value = f.format(movement['value']);
 
       movements.add(
-        Padding(
-          padding: EdgeInsets.fromLTRB(8,8,8,0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.max,
+        Column(
+          children: <Widget>[
+            ListTile(
+              title: Text(movement['description']),
+              subtitle: Text(movement['category_name']),
+              leading: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  color: Color(movement['color']),
+                ),
+                child: Icon(IconData(movement['category_icon'], fontFamily: 'MaterialIcons'), color: Colors.white, size: 17,),
+              ),
+              trailing: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Container(
-                      width: 27,
-                      height: 27,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                        color: Color(movement['color']),
-                      ),
-                      child: Icon(IconData(movement['category_icon'], fontFamily: 'MaterialIcons'), color: Colors.white, size: 17,),
-                    ),
-                  ),
-                  Container(
-                    width: 317,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(movement['description'], style: TextStyle(fontSize: 16),),
-                            Text(movement['category_name'], style: TextStyle(color: Colors.grey),),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(value),
-                            Text(movement['account_name'], style: TextStyle(color: Colors.grey),),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  Text(value),
+                  Text(movement['account_name'], style: TextStyle(color: Colors.grey)),
                 ],
               ),
-              (i != (_movements[index]['movements'].length-1)) ? Divider() : Container(),
-            ],
-          ),
+            ),
+            Divider(thickness: 1,indent: 70,) 
+          ],
         ),
       );
     }
 
-    return Padding(
-      padding: EdgeInsets.only(top: 8,bottom: 16),
-      child: Container(
-        padding: EdgeInsets.all(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 8),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '${_getDayOfWeekName(dateFormatted.weekday)}, ${dateFormatted.day}',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold
-                ),
+    return Container(
+      padding: EdgeInsets.all(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 16),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${_getDayOfWeekName(dateFormatted.weekday)}, ${dateFormatted.day}',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold
               ),
             ),
-            ...movements,
-          ],
-        ),
+          ),
+          ...movements,
+        ],
       ),
     );
   }
@@ -184,7 +160,7 @@ class _TransacoesState extends State<Transacoes> {
         title: Container(
           child: Theme(
             data: Theme.of(context).copyWith(
-                canvasColor: Colors.indigo
+              canvasColor: Colors.indigo
             ),
             child: DropdownButton(
               items: _months,

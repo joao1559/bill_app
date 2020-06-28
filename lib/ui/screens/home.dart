@@ -1,3 +1,4 @@
+import 'package:bill_app/ui/screens/artigos.dart';
 import 'package:bill_app/ui/screens/cadastro_movimentacao.dart';
 import 'package:bill_app/ui/screens/opcoes/opcoes.dart';
 import 'package:bill_app/ui/screens/resumo.dart';
@@ -88,7 +89,7 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             Resumo(),
             Transacoes(),
-            Container(color: Colors.blue,),
+            Artigos(),
             Opcoes(),
           ],
         ),

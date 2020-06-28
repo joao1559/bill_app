@@ -75,34 +75,42 @@ class _ContasState extends State<Contas> {
                           var balance = formatter.format(item['actualBalance']);
                           var icon = int.parse(item['icon']);
 
-                          return ListTile(
-                            leading: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(100)),
-                                color: Color(int.parse(item['color'])),
-                              ),
-                              child: Icon(IconData(icon, fontFamily: 'MaterialIcons'), color: Colors.white, size: 25,),
-                            ),
-                            title: Text(item['title']),
-                            subtitle: Text(item['typeTitle']),
-                            trailing: Text(
-                              balance,
-                              style: TextStyle(color: item['actualBalance'] >= 0 ? Colors.green : Colors.red),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ContasInfo(id: item['id'],))
-                              ).then((value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _scaffoldKey.currentState.showSnackBar(value);
+                          return Column(
+                            children: <Widget>[
+                              ListTile(
+                                leading: Container(
+                                  width: 35,
+                                  height: 35,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                                    color: Color(int.parse(item['color'])),
+                                  ),
+                                  child: Icon(IconData(icon, fontFamily: 'MaterialIcons'), color: Colors.white, size: 25,),
+                                ),
+                                title: Text(item['title']),
+                                subtitle: Text(item['typeTitle']),
+                                trailing: Text(
+                                  balance,
+                                  style: TextStyle(color: item['actualBalance'] >= 0 ? Colors.green : Colors.red),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ContasInfo(id: item['id'],))
+                                  ).then((value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        _scaffoldKey.currentState.showSnackBar(value);
+                                      });
+                                    }
                                   });
-                                }
-                              });
-                            },
+                                },
+                              ),
+                              Divider(
+                                indent: 70,
+                                thickness: 1,
+                              )
+                            ],
                           );
                         },
                       ),
