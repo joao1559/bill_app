@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Artigos extends StatefulWidget {
   @override
@@ -21,11 +22,19 @@ class _ArtigosState extends State<Artigos> {
     await _getToken();
 
     response = await http.get(
-      'https://run.mocky.io/v3/f16a245a-b5aa-453f-bc7a-d63c4f09f41b',
+      'https://run.mocky.io/v3/9fee0e4b-1bcb-4620-847e-fc66df83a73d',
       // headers: {HttpHeaders.authorizationHeader: 'Bearer ' + _token}
     );
     var body = utf8.decode(response.bodyBytes);
     return json.decode(body);
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -66,33 +75,42 @@ class _ArtigosState extends State<Artigos> {
                         margin: EdgeInsets.all(16),
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         elevation: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Image.network('https://s27389.pcdn.co/wp-content/uploads/2018/11/data-era-1013x440.jpeg'),
-                            Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Text(
-                                item['title'],
-                                style: TextStyle(
-                                  fontSize: 24
+                        child: InkWell(
+                          onTap: () {
+                            _launchURL(item['url']);
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Image.network(
+                                'https://neogrid-site.s3.amazonaws.com/uploads/blog/2016/04/big-data.jpg', 
+                                fit: BoxFit.fitWidth, 
+                                height: 150,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  item['title'],
+                                  style: TextStyle(
+                                    fontSize: 24
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(16,0,16,16),
-                              child: Text(
-                                item['description'],
-                                maxLines: 5,
-                                // textAlign: TextAlign.justify,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  // fontWeight: FontWeight.w300
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16,0,16,16),
+                                child: Text(
+                                  item['description'],
+                                  maxLines: 5,
+                                  // textAlign: TextAlign.justify,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    // fontWeight: FontWeight.w300
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );

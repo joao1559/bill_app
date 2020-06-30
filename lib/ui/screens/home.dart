@@ -6,8 +6,8 @@ import 'package:bill_app/ui/screens/transacoes.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:unicorndial/unicorndial.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -80,18 +80,25 @@ class _HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      body: SizedBox.expand(
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => _currentIndex = index);
-          },
-          children: <Widget>[
-            Resumo(),
-            Transacoes(),
-            Artigos(),
-            Opcoes(),
-          ],
+      body: OfflineBuilder(
+        connectivityBuilder: (context, connectivity, child) {
+          final connected = connectivity != ConnectivityResult.none;
+
+          return connected ? child : Container(child: Center(child: Text('OFFLINE')),);
+        },
+        child: SizedBox.expand(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
+            children: <Widget>[
+              Resumo(),
+              Transacoes(),
+              Artigos(),
+              Opcoes(),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavyBar(

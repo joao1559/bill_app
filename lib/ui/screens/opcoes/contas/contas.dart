@@ -48,7 +48,7 @@ class _ContasState extends State<Contas> {
         future: _getAccounts(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
-            case ConnectionState.none:          
+            case ConnectionState.none:
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             case ConnectionState.done:
@@ -61,7 +61,7 @@ class _ContasState extends State<Contas> {
                     locale: 'pt_BR'
                   );
 
-                _totalBalance = snapshot.data['totalBalance'];
+                _totalBalance = double.parse(snapshot.data['totalBalance'].toString());
                 _totalBalanceFormatted = formatter.format(_totalBalance);
               
                 return Column(
