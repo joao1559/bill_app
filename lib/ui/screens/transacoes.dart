@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Transacoes extends StatefulWidget {
   @override
   _TransacoesState createState() => _TransacoesState();
@@ -12,48 +14,32 @@ class _TransacoesState extends State<Transacoes> {
   List<DropdownMenuItem<Map<dynamic, dynamic>>> _months = [];
   List<dynamic> _movements = [];
   Map _selectedMonth;
+  String _token;
+  int _actualYear = DateTime.now().year;
+  int _actualMonth = DateTime.now().month;
 
-  String _getDayOfWeekName(int dayOfWeek) {
-    String _day;
-    switch(dayOfWeek) {
-      case 1:
-        _day = 'Segunda';
-        break;
-      case 2:
-        _day = 'Terça';
-        break;
-      case 3:
-        _day = 'Quarta';
-        break;
-      case 4:
-        _day = 'Quinta';
-        break;
-      case 5:
-        _day = 'Sexta';
-        break;
-      case 6:
-        _day = 'Sabado';
-        break;
-      case 7:
-        _day = 'Domingo';
-        break;
-    }
-
-    return _day;
+  _getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('token');
   }
 
   _getMonths() async {
-    http.Response response;
+    String payload =
+        '{"records": [{"id": 1,"name": "Janeiro"},{"id": 2,"name": "Fevereiro"},{"id": 3,"name": "Março"},{"id": 4,"name": "Abril"},{"id": 5,"name": "Maio"},{"id": 6,"name": "Junho"},{"id": 7,"name": "Julho"},{"id": 8,"name": "Agosto"},{"id": 9,"name": "Setembro"},{"id": 10,"name": "Outubro"},{"id": 11,"name": "Novembro"},{"id": 12,"name": "Dezembro"}]}';
 
-    response = await http.get('http://www.mocky.io/v2/5e8150b83000002c006f96cf');
-    var body = utf8.decode(response.bodyBytes);
-    var items = json.decode(body);
-
-    setState(() {
-      _selectedMonth = items['records'][0];
-    });
+    var items = json.decode(payload);
 
     for (var month in items['records']) {
+      if (month['id'] == _actualMonth) {
+        setState(() {
+          _selectedMonth = month;
+        });
+      } else {
+        setState(() {
+          _selectedMonth = items['records'][0];
+        });
+      }
+
       _months.add(
         DropdownMenuItem(
           value: month,
@@ -66,24 +52,38 @@ class _TransacoesState extends State<Transacoes> {
   _onChangeDropdownItem(Map selectedMonth) {
     setState(() {
       _selectedMonth = selectedMonth;
+      // _getMovements();
     });
   }
 
   _getMovements() async {
     http.Response response;
+    var _selectedMonthID = _selectedMonth['id'].toString();
 
-    response = await http.get('http://www.mocky.io/v2/5e83c9133000003800cf3fe1');
+    _selectedMonthID = _selectedMonthID.padLeft(2, '0');
+
+    response = await http.post(
+      'https://bill-financial-assistant-api.herokuapp.com/transactions-search',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'authorization': 'Bearer ' + _token
+      },
+      body: jsonEncode(
+          <String, dynamic>{'date': '$_selectedMonthID/$_actualYear'}),
+    );
     var body = utf8.decode(response.bodyBytes);
     var res = json.decode(body);
 
-    _movements = res['records'];
+    _movements = res['content'];
   }
 
   @override
   void initState() {
     super.initState();
-    _getMonths();
-    _getMovements();
+
+    _getToken().then((_) {
+      _getMonths();
+    });
   }
 
   @override
@@ -92,13 +92,14 @@ class _TransacoesState extends State<Transacoes> {
   }
 
   Widget _buildMovement(BuildContext context, int index) {
-    var dateFormatted = DateTime.parse(_movements[index]['date']);
+    var dateFormatted = _movements[index]['transactionDate'];
     List<Widget> movements = [];
 
-    for (var i = 0; i < _movements[index]['movements'].length; i++) {
-      var movement = _movements[index]['movements'][i];
+    for (var i = 0; i < _movements[index]['transactions'].length; i++) {
+      var movement = _movements[index]['transactions'][i];
 
-      var f = new NumberFormat.simpleCurrency(locale: 'pt_BR', decimalDigits: 2, name: 'R\$');
+      var f = new NumberFormat.simpleCurrency(
+          locale: 'pt_BR', decimalDigits: 2, name: 'R\$');
       var value = f.format(movement['value']);
 
       movements.add(
@@ -106,26 +107,40 @@ class _TransacoesState extends State<Transacoes> {
           children: <Widget>[
             ListTile(
               title: Text(movement['description']),
-              subtitle: Text(movement['category_name']),
+              subtitle: Text(movement['categoryTitle']),
               leading: Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(100)),
-                  color: Color(movement['color']),
+                  color: Color(int.parse(movement['categoryColor'])),
                 ),
-                child: Icon(IconData(movement['category_icon'], fontFamily: 'MaterialIcons'), color: Colors.white, size: 17,),
+                child: Icon(
+                  IconData(int.parse(movement['categoryIcon']),
+                      fontFamily: 'MaterialIcons'),
+                  color: Colors.white,
+                  size: 17,
+                ),
               ),
               trailing: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(value),
-                  Text(movement['account_name'], style: TextStyle(color: Colors.grey)),
+                  Text(
+                    value,
+                    style: TextStyle(
+                        color:
+                            movement['value'] > 0 ? Colors.green : Colors.red),
+                  ),
+                  Text(movement['accountTitle'],
+                      style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),
-            Divider(thickness: 1,indent: 70,) 
+            Divider(
+              thickness: 1,
+              indent: 70,
+            )
           ],
         ),
       );
@@ -140,11 +155,8 @@ class _TransacoesState extends State<Transacoes> {
             padding: EdgeInsets.only(left: 16),
             alignment: Alignment.centerLeft,
             child: Text(
-              '${_getDayOfWeekName(dateFormatted.weekday)}, ${dateFormatted.day}',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold
-              ),
+              dateFormatted,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
           ),
           ...movements,
@@ -159,9 +171,7 @@ class _TransacoesState extends State<Transacoes> {
       appBar: AppBar(
         title: Container(
           child: Theme(
-            data: Theme.of(context).copyWith(
-              canvasColor: Colors.indigo
-            ),
+            data: Theme.of(context).copyWith(canvasColor: Colors.indigo),
             child: DropdownButton(
               items: _months,
               value: _selectedMonth,
@@ -170,12 +180,12 @@ class _TransacoesState extends State<Transacoes> {
                 Icons.keyboard_arrow_down,
                 color: Colors.white,
               ),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 18),
               hint: Container(
-                child: Text('Loading', style: TextStyle(color: Colors.white),),
+                child: Text(
+                  'Loading',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               underline: Container(
                 color: Colors.transparent,
@@ -194,9 +204,14 @@ class _TransacoesState extends State<Transacoes> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: _movements.length,
-        itemBuilder: _buildMovement,
+      body: FutureBuilder(
+        future: _getMovements(),
+        builder: (context, snapshot) {
+          return ListView.builder(
+            itemCount: _movements.length,
+            itemBuilder: _buildMovement,
+          );
+        },
       ),
     );
   }

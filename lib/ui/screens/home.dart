@@ -40,42 +40,39 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     var _childButtons = [
       SpeedDialChild(
-        child: Icon(
-          Icons.swap_vert,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.lightBlue,
-        label: 'Transferência',
-        onTap: () {}
-      ),
+          child: Icon(
+            Icons.swap_vert,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.lightBlue,
+          label: 'Transferência',
+          onTap: () {}),
       SpeedDialChild(
-        child: Icon(
-          Icons.trending_up,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.green,
-        label: 'Entrada',
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CadastroMovimentacao(1))
-          );
-        }
-      ),
+          child: Icon(
+            Icons.trending_up,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.green,
+          label: 'Entrada',
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CadastroMovimentacao(1)));
+          }),
       SpeedDialChild(
-        child: Icon(
-          Icons.trending_down,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.redAccent,
-        label: 'Saída',
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CadastroMovimentacao(2))
-          );
-        }
-      )
+          child: Icon(
+            Icons.trending_down,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.redAccent,
+          label: 'Saída',
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CadastroMovimentacao(2)));
+          })
     ];
 
     return Scaffold(
@@ -101,56 +98,56 @@ class _HomeState extends State<Home> {
         },
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            activeColor: Colors.blue,
-            inactiveColor: Colors.blue,
-            title: Text('Resumo'),
-            icon: Icon(Icons.home)
-          ),
+              activeColor: Colors.blue,
+              inactiveColor: Colors.blue,
+              title: Text('Resumo'),
+              icon: Icon(Icons.home)),
           BottomNavyBarItem(
-            activeColor: Colors.red,
-            inactiveColor: Colors.red,
-            title: Text('Transações'),
-            icon: Icon(Icons.list)
-          ),
+              activeColor: Colors.red,
+              inactiveColor: Colors.red,
+              title: Text('Transações'),
+              icon: Icon(Icons.list)),
           BottomNavyBarItem(
-            activeColor: Colors.green,
-            inactiveColor: Colors.green,
-            title: Text('Artigos'),
-            icon: Icon(Icons.wb_incandescent, color: Colors.green,)
-          ),
+              activeColor: Colors.green,
+              inactiveColor: Colors.green,
+              title: Text('Artigos'),
+              icon: Icon(
+                Icons.wb_incandescent,
+                color: Colors.green,
+              )),
           BottomNavyBarItem(
-            activeColor: Colors.black,
-            inactiveColor: Colors.black,
-            title: Text('Opções'),
-            icon: Icon(Icons.more_horiz)
-          ),
+              activeColor: Colors.black,
+              inactiveColor: Colors.black,
+              title: Text('Opções'),
+              icon: Icon(Icons.more_horiz)),
         ],
       ),
-      floatingActionButton: _currentIndex < 2 ? SpeedDial(
-          child: Icon(_icon),
-          visible: true,
-          closeManually: false,
-          onOpen: ()  {
-            setState(() {
-              _icon = Icons.close;
-            });
-          },
-          onClose: ()  {
-            setState(() {
-              _icon = Icons.add;
-            });
-          },
-          curve: Curves.bounceIn,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          tooltip: 'Menu',
-          heroTag: 'menu',
-          backgroundColor: Colors.pink[400],
-          foregroundColor: Colors.white,
-          elevation: 8.0,
-          shape: CircleBorder(),
-          children: _childButtons
-        ) : null,
+      floatingActionButton: _currentIndex < 2
+          ? SpeedDial(
+              child: Icon(_icon),
+              visible: true,
+              closeManually: false,
+              onOpen: () {
+                setState(() {
+                  _icon = Icons.close;
+                });
+              },
+              onClose: () {
+                setState(() {
+                  _icon = Icons.add;
+                });
+              },
+              curve: Curves.bounceIn,
+              overlayColor: Colors.black,
+              overlayOpacity: 0.5,
+              tooltip: 'Menu',
+              heroTag: 'menu',
+              backgroundColor: Colors.pink[400],
+              foregroundColor: Colors.white,
+              elevation: 8.0,
+              shape: CircleBorder(),
+              children: _childButtons)
+          : null,
     );
   }
 }
