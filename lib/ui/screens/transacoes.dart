@@ -52,7 +52,6 @@ class _TransacoesState extends State<Transacoes> {
   _onChangeDropdownItem(Map selectedMonth) {
     setState(() {
       _selectedMonth = selectedMonth;
-      // _getMovements();
     });
   }
 
@@ -193,16 +192,16 @@ class _TransacoesState extends State<Transacoes> {
             ),
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_list),
-            onPressed: () {},
-          ),
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: Icon(Icons.search),
+        //     onPressed: () {},
+        //   ),
+        //   IconButton(
+        //     icon: Icon(Icons.filter_list),
+        //     onPressed: () {},
+        //   ),
+        // ],
       ),
       body: FutureBuilder(
         future: _getMovements(),

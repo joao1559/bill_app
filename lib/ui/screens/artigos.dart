@@ -57,7 +57,7 @@ class _ArtigosState extends State<Artigos> {
         future: _getArticles(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
-            case ConnectionState.none:          
+            case ConnectionState.none:
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             case ConnectionState.done:
@@ -65,57 +65,55 @@ class _ArtigosState extends State<Artigos> {
                 return Text('Error: ${snapshot.error}');
               } else {
                 return ListView.builder(
-                  itemCount: snapshot.data['content'].length,
-                  itemBuilder: (context, index) {
-                    var item = snapshot.data['content'][index];
+                    itemCount: snapshot.data['content'].length,
+                    itemBuilder: (context, index) {
+                      var item = snapshot.data['content'][index];
 
-                    return Container(
-                      child: Card(
-                        semanticContainer: true,
-                        margin: EdgeInsets.all(16),
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        elevation: 5,
-                        child: InkWell(
-                          onTap: () {
-                            _launchURL(item['url']);
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Image.network(
-                                'https://neogrid-site.s3.amazonaws.com/uploads/blog/2016/04/big-data.jpg', 
-                                fit: BoxFit.fitWidth, 
-                                height: 150,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Text(
-                                  item['title'],
-                                  style: TextStyle(
-                                    fontSize: 24
+                      return Container(
+                        child: Card(
+                          semanticContainer: true,
+                          margin: EdgeInsets.all(16),
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          elevation: 5,
+                          child: InkWell(
+                            onTap: () {
+                              _launchURL(item['url']);
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Image.network(
+                                  'https://neogrid-site.s3.amazonaws.com/uploads/blog/2016/04/big-data.jpg',
+                                  fit: BoxFit.fitWidth,
+                                  height: 150,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Text(
+                                    item['title'],
+                                    style: TextStyle(fontSize: 24),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16,0,16,16),
-                                child: Text(
-                                  item['description'],
-                                  maxLines: 5,
-                                  // textAlign: TextAlign.justify,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    // fontWeight: FontWeight.w300
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                  child: Text(
+                                    item['description'],
+                                    maxLines: 5,
+                                    // textAlign: TextAlign.justify,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      // fontWeight: FontWeight.w300
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }
-                );
+                      );
+                    });
               }
               break;
             case ConnectionState.active:

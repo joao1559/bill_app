@@ -17,6 +17,7 @@ class _HomeState extends State<Home> {
   IconData _icon = Icons.add;
   int _currentIndex = 0;
   PageController _pageController;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -56,9 +57,15 @@ class _HomeState extends State<Home> {
           label: 'Entrada',
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CadastroMovimentacao(1)));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CadastroMovimentacao(1)))
+                .then((snackbar) {
+              if (snackbar != null) {
+                _scaffoldKey.currentState.showSnackBar(snackbar);
+              }
+              setState(() {});
+            });
           }),
       SpeedDialChild(
           child: Icon(
@@ -69,13 +76,20 @@ class _HomeState extends State<Home> {
           label: 'Saída',
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CadastroMovimentacao(2)));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CadastroMovimentacao(2)))
+                .then((snackbar) {
+              if (snackbar != null) {
+                _scaffoldKey.currentState.showSnackBar(snackbar);
+              }
+              setState(() {});
+            });
           })
     ];
 
     return Scaffold(
+      key: _scaffoldKey,
       body: SizedBox.expand(
         child: PageView(
           controller: _pageController,

@@ -1,3 +1,4 @@
+import 'package:bill_app/ui/screens/opcoes/categorias/categorias.dart';
 import 'package:bill_app/ui/screens/opcoes/contas/contas.dart';
 import 'package:flutter/material.dart';
 
@@ -16,14 +17,16 @@ class Opcoes extends StatelessWidget {
             title: Text('Contas'),
             onTap: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Contas())
-              );
+                  context, MaterialPageRoute(builder: (context) => Contas()));
             },
           ),
           ListTile(
             leading: Icon(Icons.bookmark),
             title: Text('Categorias'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Categorias()));
+            },
           ),
           ListTile(
             leading: Icon(Icons.star),

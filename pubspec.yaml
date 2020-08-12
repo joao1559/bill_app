@@ -27,10 +27,12 @@ dependencies:
   bottom_navy_bar: ^5.3.2
   flutter_speed_dial: ^1.0.9
   http:
-  flutter_masked_text: ^0.7.0
+  flutter_masked_text: ^0.8.0
   intl: ^0.16.1
   shared_preferences: ^0.5.1+2
   url_launcher: ^5.4.11
+  flutter_colorpicker: ^0.3.4
+  flutter_iconpicker: ^2.1.2
 
 dev_dependencies:
   flutter_test:

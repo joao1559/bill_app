@@ -295,7 +295,8 @@ class _ResumoState extends State<Resumo> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(
-                                      width: 283,
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -311,7 +312,8 @@ class _ResumoState extends State<Resumo> {
                                     ),
                                     Container(
                                       height: 5,
-                                      width: 283,
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
                                       decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                               begin: Alignment.centerLeft,
@@ -326,7 +328,8 @@ class _ResumoState extends State<Resumo> {
                                           ])),
                                     ),
                                     Container(
-                                      width: 283,
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -373,7 +376,8 @@ class _ResumoState extends State<Resumo> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Container(
-                                      width: 283,
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -389,7 +393,8 @@ class _ResumoState extends State<Resumo> {
                                     ),
                                     Container(
                                       height: 5,
-                                      width: 283,
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
                                       decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                               begin: Alignment.centerLeft,
@@ -404,7 +409,8 @@ class _ResumoState extends State<Resumo> {
                                           ])),
                                     ),
                                     Container(
-                                      width: 283,
+                                      width: MediaQuery.of(context).size.width -
+                                          75,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -472,7 +478,8 @@ class _ResumoState extends State<Resumo> {
                                 ),
                                 Text('Faculdade'),
                                 Container(
-                                  width: 218,
+                                  width:
+                                      MediaQuery.of(context).size.width - 140,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: <Widget>[
@@ -521,7 +528,8 @@ class _ResumoState extends State<Resumo> {
                                 ),
                                 Text('Parcela carro'),
                                 Container(
-                                  width: 200,
+                                  width:
+                                      MediaQuery.of(context).size.width - 158,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: <Widget>[
