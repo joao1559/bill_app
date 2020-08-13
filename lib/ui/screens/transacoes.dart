@@ -23,7 +23,7 @@ class _TransacoesState extends State<Transacoes> {
     _token = prefs.getString('token');
   }
 
-  _getMonths() async {
+  _getMonths() {
     String payload =
         '{"records": [{"id": 1,"name": "Janeiro"},{"id": 2,"name": "Fevereiro"},{"id": 3,"name": "Março"},{"id": 4,"name": "Abril"},{"id": 5,"name": "Maio"},{"id": 6,"name": "Junho"},{"id": 7,"name": "Julho"},{"id": 8,"name": "Agosto"},{"id": 9,"name": "Setembro"},{"id": 10,"name": "Outubro"},{"id": 11,"name": "Novembro"},{"id": 12,"name": "Dezembro"}]}';
 
@@ -33,10 +33,6 @@ class _TransacoesState extends State<Transacoes> {
       if (month['id'] == _actualMonth) {
         setState(() {
           _selectedMonth = month;
-        });
-      } else {
-        setState(() {
-          _selectedMonth = items['records'][0];
         });
       }
 
@@ -53,6 +49,8 @@ class _TransacoesState extends State<Transacoes> {
     setState(() {
       _selectedMonth = selectedMonth;
     });
+
+    _getMovements();
   }
 
   _getMovements() async {
@@ -73,7 +71,9 @@ class _TransacoesState extends State<Transacoes> {
     var body = utf8.decode(response.bodyBytes);
     var res = json.decode(body);
 
-    _movements = res['content'];
+    setState(() {
+      _movements = res['content'];
+    });
   }
 
   @override
@@ -82,6 +82,7 @@ class _TransacoesState extends State<Transacoes> {
 
     _getToken().then((_) {
       _getMonths();
+      _getMovements();
     });
   }
 
@@ -167,51 +168,49 @@ class _TransacoesState extends State<Transacoes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Container(
-          child: Theme(
-            data: Theme.of(context).copyWith(canvasColor: Colors.indigo),
-            child: DropdownButton(
-              items: _months,
-              value: _selectedMonth,
-              onChanged: _onChangeDropdownItem,
-              icon: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.white,
-              ),
-              style: TextStyle(color: Colors.white, fontSize: 18),
-              hint: Container(
-                child: Text(
-                  'Loading',
-                  style: TextStyle(color: Colors.white),
+        appBar: AppBar(
+          title: Container(
+            child: Theme(
+              data: Theme.of(context).copyWith(canvasColor: Colors.indigo),
+              child: DropdownButton(
+                items: _months,
+                value: _selectedMonth,
+                onChanged: _onChangeDropdownItem,
+                icon: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
                 ),
-              ),
-              underline: Container(
-                color: Colors.transparent,
+                style: TextStyle(color: Colors.white, fontSize: 18),
+                hint: Container(
+                  child: Text(
+                    'Loading',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                underline: Container(
+                  color: Colors.transparent,
+                ),
               ),
             ),
           ),
+          // actions: <Widget>[
+          //   IconButton(
+          //     icon: Icon(Icons.search),
+          //     onPressed: () {},
+          //   ),
+          //   IconButton(
+          //     icon: Icon(Icons.filter_list),
+          //     onPressed: () {},
+          //   ),
+          // ],
         ),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: Icon(Icons.search),
-        //     onPressed: () {},
-        //   ),
-        //   IconButton(
-        //     icon: Icon(Icons.filter_list),
-        //     onPressed: () {},
-        //   ),
-        // ],
-      ),
-      body: FutureBuilder(
-        future: _getMovements(),
-        builder: (context, snapshot) {
-          return ListView.builder(
-            itemCount: _movements.length,
-            itemBuilder: _buildMovement,
-          );
-        },
-      ),
-    );
+        body: _movements.length > 0
+            ? ListView.builder(
+                itemCount: _movements.length,
+                itemBuilder: _buildMovement,
+              )
+            : Center(
+                child: Text('Você não possui transações nesse periodo...'),
+              ));
   }
 }

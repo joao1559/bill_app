@@ -33,6 +33,7 @@ dependencies:
   url_launcher: ^5.4.11
   flutter_colorpicker: ^0.3.4
   flutter_iconpicker: ^2.1.2
+  loading: ^1.0.2
 
 dev_dependencies:
   flutter_test:

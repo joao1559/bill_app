@@ -117,29 +117,8 @@ class _ResumoState extends State<Resumo> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Builder(
-                  builder: (context) => IconButton(
-                    icon: Icon(
-                      Icons.exit_to_app,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      var prefs = await SharedPreferences.getInstance();
-                      prefs.remove('email');
-                      prefs.remove('password');
-
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => Login()));
-                    },
-                  ),
-                ),
-              ],
-            ),
             Container(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 60),
               width: MediaQuery.of(context).size.width,
               alignment: Alignment.center,
               child: Text(

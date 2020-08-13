@@ -20,12 +20,13 @@ class ContasInfo extends StatefulWidget {
 class _ContasInfoState extends State<ContasInfo> {
   int _id;
   final _titleController = new TextEditingController();
-  final _balanceController = new MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
+  final _balanceController = new MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<DropdownMenuItem<Map<dynamic, dynamic>>> _accountTypeItems = [];
   Map _selectedAccountType;
   String _token;
-  bool _includeDashboard = false;
+  bool _includeDashboard = true;
   bool _mainAccount = false;
   List<dynamic> _accountTypes;
   bool _active = true;
@@ -46,13 +47,12 @@ class _ContasInfoState extends State<ContasInfo> {
     await _getToken();
 
     response = await http.get(
-      'https://bill-financial-assistant-api.herokuapp.com/account-types',
-      headers: {HttpHeaders.authorizationHeader: 'Bearer ' + _token}
-    );
+        'https://bill-financial-assistant-api.herokuapp.com/account-types',
+        headers: {HttpHeaders.authorizationHeader: 'Bearer ' + _token});
     var body = utf8.decode(response.bodyBytes);
     var res = json.decode(body);
 
-    for(var accountType in res['content']) {
+    for (var accountType in res['content']) {
       _accountTypeItems.add(
         DropdownMenuItem(
           value: accountType,
@@ -70,20 +70,20 @@ class _ContasInfoState extends State<ContasInfo> {
     http.Response response;
 
     response = await http.get(
-      'https://bill-financial-assistant-api.herokuapp.com/accounts/' + id.toString(),
-      headers: {HttpHeaders.authorizationHeader: 'Bearer ' + _token}
-    );
+        'https://bill-financial-assistant-api.herokuapp.com/accounts/' +
+            id.toString(),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer ' + _token});
     var body = utf8.decode(response.bodyBytes);
     var res = json.decode(body);
 
     _titleController.text = res['content']['title'];
-    _balanceController.updateValue(double.parse(res['content']['actualBalance'].toString()));
+    _balanceController
+        .updateValue(double.parse(res['content']['actualBalance'].toString()));
     _includeDashboard = res['content']['includeDashboard'];
     _mainAccount = res['content']['mainAccount'];
-    
+
     for (var item in _accountTypes) {
-      if(item['id'] == res['content']['typeID'])
-        _selectedAccountType = item;
+      if (item['id'] == res['content']['typeID']) _selectedAccountType = item;
     }
 
     setState(() {
@@ -100,10 +100,11 @@ class _ContasInfoState extends State<ContasInfo> {
     var balance = _balanceController.numberValue;
 
     if (_id != null) {
-      if(!_loading) {
+      if (!_loading) {
         http.Response response = await http.put(
           // 'http://192.168.100.5:3001/accounts',
-          'https://bill-financial-assistant-api.herokuapp.com/accounts/' + _id.toString(),
+          'https://bill-financial-assistant-api.herokuapp.com/accounts/' +
+              _id.toString(),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'authorization': 'Bearer ' + _token
@@ -146,7 +147,7 @@ class _ContasInfoState extends State<ContasInfo> {
     super.initState();
 
     _getAccountTypes().then((value) {
-      if(_id != null) {
+      if (_id != null) {
         _getAccountById(_id);
       }
     });
@@ -158,156 +159,162 @@ class _ContasInfoState extends State<ContasInfo> {
       appBar: AppBar(
         title: _id != null ? Text('Alterar Conta') : Text('Nova Conta'),
         actions: <Widget>[
-          _id != null ? IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              setState(() {
-                _active = false;
-              });
-              _submit().then((res) {
-                if (res == null) {
-                  return;
-                } else if (res['error'] != null) {
-                  final snackBar = SnackBar(
-                    content: Text(res['message']),
-                  );
-                  Scaffold.of(context).showSnackBar(snackBar);
-                } else {
-                  final snackBar = SnackBar(
-                    content: Text('Conta deletada com sucesso!'),
-                  );
+          _id != null
+              ? IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      _active = false;
+                    });
+                    _submit().then((res) {
+                      if (res == null) {
+                        return;
+                      } else if (res['error'] != null) {
+                        final snackBar = SnackBar(
+                          content: Text(res['message']),
+                        );
+                        Scaffold.of(context).showSnackBar(snackBar);
+                      } else {
+                        final snackBar = SnackBar(
+                          content: Text('Conta deletada com sucesso!'),
+                        );
 
-                  Navigator.pop(context, snackBar);
-                }
-              });
-            },
-          ) : Container()
+                        Navigator.pop(context, snackBar);
+                      }
+                    });
+                  },
+                )
+              : Container()
         ],
       ),
       body: Container(
         padding: EdgeInsets.all(16),
         child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              //title
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 16),
-                child: TextFormField(
-                  controller: _titleController,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.person, color: Colors.pink[400],),
-                    border: OutlineInputBorder(),
-                    labelText: 'Título',
-                    labelStyle: TextStyle(color: Colors.black87),
-                    hintText: 'Ex: Santander',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    helperText: 'Qual o título desta conta'
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Insira um título';
-                    }
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                //title
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  child: TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.create),
+                        helperText: 'Informe o título da conta',
+                        border: OutlineInputBorder(),
+                        labelText: 'Título',
+                        labelStyle: TextStyle(color: Colors.black87),
+                        hintText: 'Ex: Nubank',
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Insira o título';
+                        }
 
-                    return null;
-                  }
+                        return null;
+                      }),
                 ),
-              ),
-              //initial value
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: _balanceController,
-                  decoration: InputDecoration(
-                    helperText: 'Qual o saldo',
-                    border: OutlineInputBorder(),
-                    labelText: 'Saldo',
-                    labelStyle: TextStyle(color: Colors.black87),
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Insira o saldo';
-                    }
+                //initial value
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: _balanceController,
+                      decoration: InputDecoration(
+                        helperText: 'Qual o saldo',
+                        border: OutlineInputBorder(),
+                        labelText: 'Saldo',
+                        labelStyle: TextStyle(color: Colors.black87),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Insira o saldo';
+                        }
 
-                    return null;
-                  }
+                        return null;
+                      }),
                 ),
-              ),
-              //account type
-              DropdownButtonFormField(
-                value: _selectedAccountType,
-                onChanged: _onChangeDropdownItem,
-                items: _accountTypeItems,
-                isDense: true,
-                decoration: InputDecoration(
-                  prefixIcon: _selectedAccountType != null ? Icon(IconData(int.parse(_selectedAccountType['icon']), fontFamily: 'MaterialIcons'), color: Color(int.parse(_selectedAccountType['color'])),) : null,
-                  helperText: 'Qual o tipo da conta',
-                  border: OutlineInputBorder(),
-                  labelText: 'Tipo',
-                  labelStyle: TextStyle(color: Colors.black87),
-                ),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Insira a categoria';
-                  }
-
-                  return null;
-                }
-              ),
-              //include on dashboard
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _includeDashboard = !_includeDashboard;
-                  });
-                },
-                child: Row(
-                  children: <Widget>[
-                    Checkbox(
-                      activeColor: Colors.pink[400],
-                      value: _includeDashboard, 
-                      onChanged: (_) {
-                        setState(() {
-                          _includeDashboard = !_includeDashboard;
-                        });
-                      }
+                //account type
+                DropdownButtonFormField(
+                    value: _selectedAccountType,
+                    onChanged: _onChangeDropdownItem,
+                    items: _accountTypeItems,
+                    isDense: true,
+                    decoration: InputDecoration(
+                      prefixIcon: _selectedAccountType != null
+                          ? Icon(
+                              IconData(int.parse(_selectedAccountType['icon']),
+                                  fontFamily: 'MaterialIcons'),
+                              color: Color(
+                                  int.parse(_selectedAccountType['color'])),
+                            )
+                          : null,
+                      helperText: 'Qual o tipo da conta',
+                      border: OutlineInputBorder(),
+                      labelText: 'Tipo',
+                      labelStyle: TextStyle(color: Colors.black87),
                     ),
-                    Text('Incluir saldo no dashboard')
-                  ],
-                ),
-              ),
-              //main account
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _mainAccount = !_mainAccount;
-                  });
-                },
-                child: Row(
-                  children: <Widget>[
-                    Checkbox(
-                      activeColor: Colors.pink[400],
-                      value: _mainAccount, 
-                      onChanged: (_) {
-                        setState(() {
-                          _mainAccount = !_mainAccount;
-                        });
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Insira a categoria';
                       }
-                    ),
-                    Text('Conta principal')
-                  ],
+
+                      return null;
+                    }),
+                //include on dashboard
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _includeDashboard = !_includeDashboard;
+                    });
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                          activeColor: Colors.pink[400],
+                          value: _includeDashboard,
+                          onChanged: (_) {
+                            setState(() {
+                              _includeDashboard = !_includeDashboard;
+                            });
+                          }),
+                      Text('Incluir saldo no dashboard')
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          )
-        ),
+                //main account
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _mainAccount = !_mainAccount;
+                    });
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                          activeColor: Colors.pink[400],
+                          value: _mainAccount,
+                          onChanged: (_) {
+                            setState(() {
+                              _mainAccount = !_mainAccount;
+                            });
+                          }),
+                      Text('Conta principal')
+                    ],
+                  ),
+                ),
+              ],
+            )),
       ),
       floatingActionButton: Builder(
         builder: (context) => FloatingActionButton(
           backgroundColor: Colors.green,
-          child: Icon(Icons.check, color: Colors.white,),
+          child: Icon(
+            Icons.check,
+            color: Colors.white,
+          ),
           onPressed: () {
             if (_formKey.currentState.validate()) {
               _submit().then((res) {
@@ -320,7 +327,9 @@ class _ContasInfoState extends State<ContasInfo> {
                   Scaffold.of(context).showSnackBar(snackBar);
                 } else {
                   final snackBar = SnackBar(
-                    content: Text(_id != null ? 'Conta atualizada com sucesso!' : 'Conta criada com sucesso!'),
+                    content: Text(_id != null
+                        ? 'Conta atualizada com sucesso!'
+                        : 'Conta criada com sucesso!'),
                   );
 
                   Navigator.pop(context, snackBar);

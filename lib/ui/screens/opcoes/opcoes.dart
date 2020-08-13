@@ -1,6 +1,8 @@
+import 'package:bill_app/ui/screens/login.dart';
 import 'package:bill_app/ui/screens/opcoes/categorias/categorias.dart';
 import 'package:bill_app/ui/screens/opcoes/contas/contas.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Opcoes extends StatelessWidget {
   @override
@@ -35,6 +37,18 @@ class Opcoes extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.calendar_today),
             title: Text('Agenda'),
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () async {
+              var prefs = await SharedPreferences.getInstance();
+              prefs.remove('email');
+              prefs.remove('password');
+
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Login()));
+            },
           ),
         ],
       ),

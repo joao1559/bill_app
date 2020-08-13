@@ -47,7 +47,7 @@ class _CadastroMovimentacaoState extends State<CadastroMovimentacao> {
     http.Response response;
 
     response = await http.get(
-        'https://bill-financial-assistant-api.herokuapp.com/categories?type=' +
+        'https://bill-financial-assistant-api.herokuapp.com/categories?active=true&type=' +
             (_entradaSaida == 1 ? 'I' : 'E'),
         headers: {HttpHeaders.authorizationHeader: 'Bearer ' + _token});
 
