@@ -93,6 +93,8 @@ class _CadastroMovimentacaoState extends State<CadastroMovimentacao> {
     var dateList = _dateController.text.split('/');
     var date = dateList.reversed.join('-');
 
+    print(value);
+
     http.Response response = await http.post(
       'https://bill-financial-assistant-api.herokuapp.com/transactions',
       headers: <String, String>{
@@ -195,6 +197,7 @@ class _CadastroMovimentacaoState extends State<CadastroMovimentacao> {
                         validator: (value) {
                           var valueParsed = double.parse(value
                               .replaceAll('R\$ ', '')
+                              .replaceAll('.', '')
                               .replaceAll(',', '.'));
 
                           if (valueParsed <= 0) {

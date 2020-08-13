@@ -1,6 +1,7 @@
 import 'package:bill_app/ui/screens/login.dart';
 import 'package:bill_app/ui/screens/opcoes/categorias/categorias.dart';
 import 'package:bill_app/ui/screens/opcoes/contas/contas.dart';
+import 'package:bill_app/ui/screens/opcoes/graficos/graficos.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,6 +29,14 @@ class Opcoes extends StatelessWidget {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => Categorias()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.trending_up),
+            title: Text('Gráficos'),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Graficos()));
             },
           ),
           ListTile(
