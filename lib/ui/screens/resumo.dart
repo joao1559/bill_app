@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,6 +29,7 @@ class _ResumoState extends State<Resumo> {
 
   _getAccounts() async {
     http.Response response;
+    _accounts = [];
 
     response = await http.get(
         'https://bill-financial-assistant-api.herokuapp.com/accounts?includeDashboard=true&active=true',
@@ -109,6 +111,15 @@ class _ResumoState extends State<Resumo> {
     });
   }
 
+  Future<void> _refresh() async {
+    _getAccounts().then((_) {
+      _getBalance().then((_) {
+        setState(() {});
+        return;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -117,428 +128,449 @@ class _ResumoState extends State<Resumo> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 60),
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              child: Text(
-                _totalBalance,
-                style: TextStyle(fontSize: 42, color: Colors.white),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: 25),
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              child: Text(
-                'Saldo atual em contas',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ),
             Expanded(
-              child: ListView(
-                children: <Widget>[
-                  Card(
-                    key: UniqueKey(),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      width: 350,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Text(
-                              'Resumo de contas',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ),
-                          ..._accounts
-                        ],
+              child: LiquidPullToRefresh(
+                onRefresh: _refresh,
+                showChildOpacityTransition: false,
+                springAnimationDurationInMilliseconds: 600,
+                color: Colors.pink[400],
+                child: ListView(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(top: 60),
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      child: Text(
+                        _totalBalance,
+                        style: TextStyle(fontSize: 42, color: Colors.white),
                       ),
                     ),
-                  ),
-                  Card(
-                    key: UniqueKey(),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      width: 350,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Text(
-                              'Balanço mensal',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  'Entradas',
-                                  style: TextStyle(color: Colors.green),
-                                ),
-                                Text(
-                                  _totalMonthIncomes,
-                                  style: TextStyle(color: Colors.green),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  'Saídas',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                                Text(
-                                  _totalMonthExpenses,
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Divider(
-                            thickness: 2,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text('Total'),
-                                Text(_totalMonthCashBalance),
-                              ],
-                            ),
-                          ),
-                        ],
+                    Container(
+                      padding: EdgeInsets.only(bottom: 25),
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Saldo atual em contas',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
-                  ),
-                  Card(
-                    key: UniqueKey(),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      width: 350,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Text(
-                              'Metas e objetivos',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
+                    Card(
+                      key: UniqueKey(),
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        width: 350,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                'Resumo de contas',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8),
-                                  child: Container(
-                                    width: 27,
-                                    height: 27,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                      color: Colors.blue,
-                                    ),
-                                    child: Icon(
-                                      Icons.directions_car,
-                                      color: Colors.white,
-                                      size: 17,
-                                    ),
+                            ..._accounts
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      key: UniqueKey(),
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        width: 350,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                'Balanço mensal',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Entradas',
+                                    style: TextStyle(color: Colors.green),
                                   ),
+                                  Text(
+                                    _totalMonthIncomes,
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Saídas',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  Text(
+                                    _totalMonthExpenses,
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Divider(
+                              thickness: 2,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('Total'),
+                                  Text(_totalMonthCashBalance),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      key: UniqueKey(),
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        width: 350,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                'Metas e objetivos',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          75,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text('Carro novo'),
-                                          Text(
-                                            '50.00%',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: MediaQuery.of(context).size.width -
-                                          75,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Container(
+                                      width: 27,
+                                      height: 27,
                                       decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                              stops: [
-                                            0.5,
-                                            0.5
-                                          ],
-                                              colors: [
-                                            Colors.blue,
-                                            Colors.grey
-                                          ])),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          75,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: <Widget>[
-                                          Text('R\$ 16.000,00',
-                                              style: TextStyle(
-                                                  color: Colors.grey)),
-                                          Text('/',
-                                              style: TextStyle(
-                                                  color: Colors.grey)),
-                                          Text('R\$ 32.000,00',
-                                              style:
-                                                  TextStyle(color: Colors.grey))
-                                        ],
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100)),
+                                        color: Colors.blue,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8),
-                                  child: Container(
-                                    width: 27,
-                                    height: 27,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                      color: Colors.red,
-                                    ),
-                                    child: Icon(
-                                      Icons.local_atm,
-                                      color: Colors.white,
-                                      size: 17,
+                                      child: Icon(
+                                        Icons.directions_car,
+                                        color: Colors.white,
+                                        size: 17,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          75,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text('Fundo emergêncial'),
-                                          Text(
-                                            '67.00%',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 5,
-                                      width: MediaQuery.of(context).size.width -
-                                          75,
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                              stops: [
-                                            0.67,
-                                            0.33
-                                          ],
-                                              colors: [
-                                            Colors.blue,
-                                            Colors.grey
-                                          ])),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          75,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: <Widget>[
-                                          Text('R\$ 6.700,00',
-                                              style: TextStyle(
-                                                  color: Colors.grey)),
-                                          Text('/',
-                                              style: TextStyle(
-                                                  color: Colors.grey)),
-                                          Text('R\$ 10.000,00',
-                                              style:
-                                                  TextStyle(color: Colors.grey))
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    key: UniqueKey(),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      width: 350,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Text(
-                              'Agenda',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8),
-                                  child: Container(
-                                    width: 27,
-                                    height: 27,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                      color: Colors.blue,
-                                    ),
-                                    child: Center(
-                                        child: Text(
-                                      '09',
-                                      style: TextStyle(color: Colors.white),
-                                    )),
-                                  ),
-                                ),
-                                Text('Faculdade'),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width - 140,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Container(
-                                          width: 70,
-                                          height: 18,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100)),
-                                            color: Colors.green,
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                            'Pago',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ))),
-                                      Text('R\$ 32.000,00',
-                                          style: TextStyle(color: Colors.grey))
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                75,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text('Carro novo'),
+                                            Text(
+                                              '50.00%',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 5,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                75,
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                begin: Alignment.centerLeft,
+                                                end: Alignment.centerRight,
+                                                stops: [
+                                              0.5,
+                                              0.5
+                                            ],
+                                                colors: [
+                                              Colors.blue,
+                                              Colors.grey
+                                            ])),
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                75,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            Text('R\$ 16.000,00',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                            Text('/',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                            Text('R\$ 32.000,00',
+                                                style: TextStyle(
+                                                    color: Colors.grey))
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 16),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8),
-                                  child: Container(
-                                    width: 27,
-                                    height: 27,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                      color: Colors.deepPurple,
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Container(
+                                      width: 27,
+                                      height: 27,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100)),
+                                        color: Colors.red,
+                                      ),
+                                      child: Icon(
+                                        Icons.local_atm,
+                                        color: Colors.white,
+                                        size: 17,
+                                      ),
                                     ),
-                                    child: Center(
-                                        child: Text(
-                                      '22',
-                                      style: TextStyle(color: Colors.white),
-                                    )),
                                   ),
-                                ),
-                                Text('Parcela carro'),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width - 158,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Container(
-                                          width: 70,
-                                          height: 18,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100)),
-                                            color: Colors.red,
-                                          ),
-                                          child: Center(
-                                              child: Text(
-                                            'Atrasado',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ))),
-                                      Text('R\$ 32.000,00',
-                                          style: TextStyle(color: Colors.grey))
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                75,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text('Fundo emergêncial'),
+                                            Text(
+                                              '67.00%',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 5,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                75,
+                                        decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                begin: Alignment.centerLeft,
+                                                end: Alignment.centerRight,
+                                                stops: [
+                                              0.67,
+                                              0.33
+                                            ],
+                                                colors: [
+                                              Colors.blue,
+                                              Colors.grey
+                                            ])),
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                75,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            Text('R\$ 6.700,00',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                            Text('/',
+                                                style: TextStyle(
+                                                    color: Colors.grey)),
+                                            Text('R\$ 10.000,00',
+                                                style: TextStyle(
+                                                    color: Colors.grey))
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    Card(
+                      key: UniqueKey(),
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        width: 350,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                'Agenda',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Container(
+                                      width: 27,
+                                      height: 27,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100)),
+                                        color: Colors.blue,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        '09',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                    ),
+                                  ),
+                                  Text('Faculdade'),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width - 140,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Container(
+                                            width: 70,
+                                            height: 18,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(100)),
+                                              color: Colors.green,
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              'Pago',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ))),
+                                        Text('R\$ 32.000,00',
+                                            style:
+                                                TextStyle(color: Colors.grey))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Container(
+                                      width: 27,
+                                      height: 27,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100)),
+                                        color: Colors.deepPurple,
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        '22',
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                    ),
+                                  ),
+                                  Text('Parcela carro'),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width - 158,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Container(
+                                            width: 70,
+                                            height: 18,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(100)),
+                                              color: Colors.red,
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              'Atrasado',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ))),
+                                        Text('R\$ 32.000,00',
+                                            style:
+                                                TextStyle(color: Colors.grey))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

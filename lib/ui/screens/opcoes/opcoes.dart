@@ -40,16 +40,18 @@ class Opcoes extends StatelessWidget {
             },
           ),
           ListTile(
+            enabled: false,
             leading: Icon(Icons.star),
             title: Text('Metas e Objetivos'),
           ),
           ListTile(
+            enabled: false,
             leading: Icon(Icons.calendar_today),
             title: Text('Agenda'),
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            title: Text('Sair'),
             onTap: () async {
               var prefs = await SharedPreferences.getInstance();
               prefs.remove('email');

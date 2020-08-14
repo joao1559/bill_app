@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,6 +75,10 @@ class _TransacoesState extends State<Transacoes> {
     setState(() {
       _movements = res['content'];
     });
+  }
+
+  Future<void> _refresh() async {
+    _getMovements();
   }
 
   @override
@@ -205,9 +210,15 @@ class _TransacoesState extends State<Transacoes> {
           // ],
         ),
         body: _movements.length > 0
-            ? ListView.builder(
-                itemCount: _movements.length,
-                itemBuilder: _buildMovement,
+            ? LiquidPullToRefresh(
+                onRefresh: _refresh,
+                showChildOpacityTransition: false,
+                springAnimationDurationInMilliseconds: 600,
+                color: Colors.pink[400],
+                child: ListView.builder(
+                  itemCount: _movements.length,
+                  itemBuilder: _buildMovement,
+                ),
               )
             : Center(
                 child: Text('Você não possui transações nesse periodo...'),

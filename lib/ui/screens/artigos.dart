@@ -42,16 +42,6 @@ class _ArtigosState extends State<Artigos> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Artigos'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.filter_list),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: FutureBuilder(
         future: _getArticles(),

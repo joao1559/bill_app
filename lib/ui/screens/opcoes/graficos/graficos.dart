@@ -8,10 +8,10 @@ final List<List<CircularStackEntry>> _quarterlyProfitPieData = [
   <CircularStackEntry>[
     new CircularStackEntry(
       <CircularSegmentEntry>[
-        new CircularSegmentEntry(600.0, Colors.red[200], rankKey: 'Q1'),
-        new CircularSegmentEntry(800.0, Colors.green[200], rankKey: 'Q2'),
-        new CircularSegmentEntry(2000.0, Colors.blue[200], rankKey: 'Q3'),
-        new CircularSegmentEntry(1600.0, Colors.yellow[200], rankKey: 'Q4'),
+        new CircularSegmentEntry(600.0, Colors.red, rankKey: 'Q1'),
+        new CircularSegmentEntry(800.0, Colors.green, rankKey: 'Q2'),
+        new CircularSegmentEntry(2000.0, Colors.blue, rankKey: 'Q3'),
+        new CircularSegmentEntry(1600.0, Colors.yellow, rankKey: 'Q4'),
       ],
       rankKey: 'Quarterly Profits',
     ),
@@ -116,9 +116,9 @@ class _GraficosState extends State<Graficos> {
                                     clickData.color,
                                 id: 'Clicks',
                                 data: [
-                                  ClicksPerYear('Nov', 1800, Colors.green),
-                                  ClicksPerYear('Dez', 4000, Colors.green),
-                                  ClicksPerYear('Jan', 4800, Colors.green),
+                                  ClicksPerYear('Jul', 1800, Colors.green),
+                                  ClicksPerYear('Ago', 4000, Colors.green),
+                                  ClicksPerYear('Set', 4800, Colors.green),
                                 ],
                               ),
                               charts.Series(
@@ -130,9 +130,9 @@ class _GraficosState extends State<Graficos> {
                                     clickData.color,
                                 id: 'Clicks',
                                 data: [
-                                  ClicksPerYear('Nov', 1200, Colors.red),
-                                  ClicksPerYear('Dez', 3000, Colors.red),
-                                  ClicksPerYear('Jan', 1000, Colors.red),
+                                  ClicksPerYear('Jul', 1200, Colors.red),
+                                  ClicksPerYear('Ago', 3000, Colors.red),
+                                  ClicksPerYear('Set', 1000, Colors.red),
                                 ],
                               ),
                             ],
@@ -172,106 +172,13 @@ class _GraficosState extends State<Graficos> {
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(100)),
-                              color: Colors.red[200],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              'Contas',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              'R\$ 600,00',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              '(12%)',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              color: Colors.green[200],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              'Casa',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              'R\$ 800,00',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              '(16%)',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              color: Colors.blue[200],
+                              color: Colors.blue,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Text(
                               'Educação',
-                              style: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ],
@@ -317,7 +224,6 @@ class _GraficosState extends State<Graficos> {
                             padding: const EdgeInsets.only(left: 8),
                             child: Text(
                               'Transporte',
-                              style: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ],
@@ -335,6 +241,96 @@ class _GraficosState extends State<Graficos> {
                             padding: const EdgeInsets.only(left: 8),
                             child: Text(
                               '(32%)',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                              color: Colors.green,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              'Casa',
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              'R\$ 800,00',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              '(16%)',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                              color: Colors.red,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              'Contas',
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              'R\$ 600,00',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              '(12%)',
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
