@@ -23,7 +23,6 @@ class _LoginState extends State<Login> {
 
   Future<Map> _login() async {
     http.Response response = await http.post(
-      // 'http://192.168.100.5:3001/auth',
       'https://bill-financial-assistant-api.herokuapp.com/auth',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
