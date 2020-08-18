@@ -1,5 +1,6 @@
 import 'package:bill_app/ui/screens/artigos.dart';
 import 'package:bill_app/ui/screens/cadastro_movimentacao.dart';
+import 'package:bill_app/ui/screens/cadastro_transferencia.dart';
 import 'package:bill_app/ui/screens/opcoes/opcoes.dart';
 import 'package:bill_app/ui/screens/resumo.dart';
 import 'package:bill_app/ui/screens/transacoes.dart';
@@ -47,7 +48,18 @@ class _HomeState extends State<Home> {
           ),
           backgroundColor: Colors.lightBlue,
           label: 'Transferência',
-          onTap: () {}),
+          onTap: () {
+            Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CadastroTransferencia()))
+                .then((snackbar) {
+              if (snackbar != null) {
+                _scaffoldKey.currentState.showSnackBar(snackbar);
+              }
+              setState(() {});
+            });
+          }),
       SpeedDialChild(
           child: Icon(
             Icons.trending_up,
