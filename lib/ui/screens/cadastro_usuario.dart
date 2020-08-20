@@ -43,127 +43,134 @@ class _CadastroState extends State<Cadastro> {
       appBar: AppBar(
         title: Text('Informe seus dados'),
       ),
-      body: Container(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              //Nome
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 8),
-                child: TextFormField(
-                    controller: _nameController,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                //Nome
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  child: TextFormField(
+                      controller: _nameController,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: Colors.pink[400],
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: 'Nome',
+                          labelStyle: TextStyle(color: Colors.black87),
+                          hintText: 'Ex: John Doe',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          helperText: 'Informe seu nome completo'),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Insira um nome';
+                        }
+
+                        return null;
+                      }),
+                ),
+                //Email
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: Colors.pink[400],
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: 'E-mail',
+                          labelStyle: TextStyle(color: Colors.black87),
+                          hintText: 'Ex: email@email.com',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          helperText: 'Informe seu e-mail para cadastro'),
+                      validator: (value) {
+                        RegExp regExp = new RegExp(
+                            r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+
+                        if (value.isEmpty) {
+                          return 'Insira um e-mail';
+                        } else if (!regExp.hasMatch(value)) {
+                          return "Email inválido";
+                        }
+
+                        return null;
+                      }),
+                ),
+                //Password
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  child: TextFormField(
+                      controller: _passwordController,
+                      obscureText: _hidePassword,
+                      decoration: InputDecoration(
                         prefixIcon: Icon(
-                          Icons.person,
+                          Icons.lock,
                           color: Colors.pink[400],
                         ),
-                        border: OutlineInputBorder(),
-                        labelText: 'Nome',
-                        labelStyle: TextStyle(color: Colors.black87),
-                        hintText: 'Ex: John Doe',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        helperText: 'Informe seu nome completo'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Insira um nome';
-                      }
-
-                      return null;
-                    }),
-              ),
-              //Email
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 8),
-                child: TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.person,
-                          color: Colors.pink[400],
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              _hidePassword = !_hidePassword;
+                            });
+                          },
                         ),
                         border: OutlineInputBorder(),
-                        labelText: 'E-mail',
+                        labelText: 'Senha',
                         labelStyle: TextStyle(color: Colors.black87),
-                        hintText: 'Ex: email@email.com',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        helperText: 'Informe seu e-mail para cadastro'),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Insira um e-mail';
-                      }
-
-                      return null;
-                    }),
-              ),
-              //Password
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 16),
-                child: TextFormField(
-                    controller: _passwordController,
-                    obscureText: _hidePassword,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.pink[400],
                       ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            _hidePassword = !_hidePassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(),
-                      labelText: 'Senha',
-                      labelStyle: TextStyle(color: Colors.black87),
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Insira a senha';
-                      }
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Insira a senha';
+                        }
 
-                      return null;
-                    }),
-              ),
-              //Confirm password
-              Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 16),
-                child: TextFormField(
-                    controller: _confirmPasswordController,
-                    obscureText: _hideConfirmPassword,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Colors.pink[400],
+                        return null;
+                      }),
+                ),
+                //Confirm password
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  child: TextFormField(
+                      controller: _confirmPasswordController,
+                      obscureText: _hideConfirmPassword,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Colors.pink[400],
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              _hideConfirmPassword = !_hideConfirmPassword;
+                            });
+                          },
+                        ),
+                        border: OutlineInputBorder(),
+                        labelText: 'Confirme a senha',
+                        labelStyle: TextStyle(color: Colors.black87),
                       ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            _hideConfirmPassword = !_hideConfirmPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(),
-                      labelText: 'Confirme a senha',
-                      labelStyle: TextStyle(color: Colors.black87),
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Insira a confirmação de senha';
-                      }
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Insira a confirmação de senha';
+                        }
 
-                      if (value != _passwordController.text)
-                        return 'As senhas não são iguais';
+                        if (value != _passwordController.text)
+                          return 'As senhas não são iguais';
 
-                      return null;
-                    }),
-              ),
-            ],
+                        return null;
+                      }),
+                ),
+              ],
+            ),
           ),
         ),
       ),
