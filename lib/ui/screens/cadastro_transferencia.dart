@@ -22,7 +22,6 @@ class _CadastroTransferenciaState extends State<CadastroTransferencia> {
   final _valorController = new MoneyMaskedTextController(
       decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$ ');
   final _dateController = new MaskedTextController(mask: '00/00/0000');
-  final _descricaoController = new TextEditingController();
 
   _getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,15 +56,15 @@ class _CadastroTransferenciaState extends State<CadastroTransferencia> {
     var date = dateList.reversed.join('-');
 
     http.Response response = await http.post(
-      'https://bill-financial-assistant-api.herokuapp.com/transactions',
+      'https://bill-financial-assistant-api.herokuapp.com/transactions/transference',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'authorization': 'Bearer ' + _token
       },
       body: jsonEncode(<String, dynamic>{
-        "accountID": _selectedAccountDe['id'],
+        "accountFrom": _selectedAccountDe['id'],
+        "accountTo": _selectedAccountPara['id'],
         "value": value,
-        "description": _descricaoController.text,
         "date": date
       }),
     );
@@ -197,28 +196,6 @@ class _CadastroTransferenciaState extends State<CadastroTransferencia> {
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Insira a data';
-                          }
-
-                          return null;
-                        }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: TextFormField(
-                        textCapitalization: TextCapitalization.sentences,
-                        controller: _descricaoController,
-                        decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.create),
-                          helperText: 'Informe uma descrição do evento',
-                          border: OutlineInputBorder(),
-                          labelText: 'Descrição',
-                          labelStyle: TextStyle(color: Colors.black87),
-                          hintText: 'Ex: Jantar',
-                          hintStyle: TextStyle(color: Colors.grey),
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Insira a descrição';
                           }
 
                           return null;
